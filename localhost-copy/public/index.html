@@ -20,6 +20,7 @@
     <!--  Google Font Style -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
     <!--  Custom Style -->
+    <link rel="stylesheet" type="text/css" href="https://developer.spotify.com/web-api/static/css/cached.css">
     <link href="assets/css/style.css" rel="stylesheet" />
 
     <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
@@ -44,7 +45,7 @@
   }
 
 #home{
-    margin-top: 40px;
+    margin-top: 130px;
 }
     </style>
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
@@ -86,7 +87,10 @@
       <div class="overlay">
           <div class="container">
             <div id="oauth" class="hideme"></div>
-            <div id="playlists"></div>
+            <div class="row">
+              <div class="col-xs-6" id="playlists"></div>
+              <div class="col-xs-6" id="nowplaying"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -94,10 +98,19 @@
 
 <script id="playlists-template" type="text/x-handlebars-template">
   <h2>Your Playlists</h2>
-    {{#each items}}
-    <h2>{{name}}</h2>
-    <iframe src="https://embed.spotify.com/?uri=spotify:user:{{owner.id}}:playlist:{{id}}" width="500" height="400" frameborder="0" allowtransparency="true"></iframe>
-    {{/each}}
+  <div class="media">
+    <div class="media-body">
+      {{#each items}}
+      <dl class="dl-horizontal">
+        <dd><button class="btn btn-primary playlistbtn" value="{{name}}" id="spotify:user:{{owner.id}}:playlist:{{id}}">{{name}}</button></dd>
+      </dl>
+      {{/each}}
+    </div>
+  </div>
+
+    
+    
+    
 </script>
 
 <script id="user-profile-template" type="text/x-handlebars-template">
@@ -155,6 +168,7 @@
           $.ajax({
                 url: 'https://api.spotify.com/v1/users/' + userID + '/playlists',
                 type: 'GET',
+                data: {limit: '6'},
                 headers: { 'Authorization': 'Bearer ' + authToken},
                 success: function (response) {
                     console.log(response);
@@ -215,6 +229,14 @@
               });
             });
           }, false);
+
+          playlists.addEventListener('click', function (e) {
+              var target = e.target;
+              if (target !== null && target.classList.contains('playlistbtn')) {
+                var newcontent = '<h2>' + target.value + '</h2> <iframe src="https://embed.spotify.com/?uri=' + target.id + '" width="500" height="400" frameborder="0" allowtransparency="true"></iframe>';
+                document.getElementById("nowplaying").innerHTML = newcontent;
+              }
+          });
         }
       })();
     </script>
