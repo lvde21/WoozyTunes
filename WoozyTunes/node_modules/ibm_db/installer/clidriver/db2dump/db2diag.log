@@ -1,0 +1,73 @@
+
+2015-02-17-05.31.04.013388-300 I1E1322              LEVEL: Event
+PID     : 58537                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, RAS/PD component, pdLogInternal, probe:120
+START   : New Diagnostic Log file
+DATA #1 : Build Level, 232 bytes
+Instance "DB2" uses "64" bits and DB2 code release "SQL10055"
+with level identifier "0606010E".
+Informational tokens are "DB2 v10.5.0.5", "special_33360", "DARWIN64105_33360", Fix Pack "5".
+DATA #2 : System Info, 1760 bytes
+System: Darwin davyjones.torolab.ibm.com 14.0.0 Darwin Kernel Version 14.0.0: Fri Sep 19 00:26:44 PDT 2014; root:xnu-2782.1.97~2/RELEASE_X86_64 x86_64
+CPU: total:2 online:2 Threading degree per core:1 SIMD:N
+Physical Memory(MB): total:3982 free:1785
+Virtual  Memory(MB): total:3982 free:1785
+Swap     Memory(MB): total:0 free:0
+Cur cpu time limit (seconds)  = 0x7FFFFFFFFFFFFFFF
+Cur file size limit (bytes) = 0x7FFFFFFFFFFFFFFF
+Cur data size (bytes)  = 0x7FFFFFFFFFFFFFFF
+Cur stack size (bytes)  = 0x0000000000800000
+Cur core size (bytes)  = 0x0000000000000000
+Cur memory size (bytes) = 0x7FFFFFFFFFFFFFFF
+nofiles (descriptors)  = 0x0000000000000100
+
+Information in this record is only valid at the time when this file was
+created (see this record's time stamp)
+
+2015-02-17-05.31.04.082971-300 I1324E414            LEVEL: Error
+PID     : 58537                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlccMapSSLErrorToDB2Error, probe:30
+MESSAGE : DIA3604E The SSL function "gsk_secure_soc_init" failed with the 
+          return code "414" in "sqlccSSLSocketSetup".
+
+2015-02-17-05.31.45.959329-300 I1739E414            LEVEL: Error
+PID     : 58539                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlccMapSSLErrorToDB2Error, probe:30
+MESSAGE : DIA3604E The SSL function "gsk_secure_soc_init" failed with the 
+          return code "414" in "sqlccSSLSocketSetup".
+
+2015-02-17-06.09.44.640515-300 I2154E414            LEVEL: Error
+PID     : 58603                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlccMapSSLErrorToDB2Error, probe:30
+MESSAGE : DIA3604E The SSL function "gsk_secure_soc_init" failed with the 
+          return code "414" in "sqlccSSLSocketSetup".
+
+2015-02-17-06.11.09.508681-300 I2569E414            LEVEL: Error
+PID     : 58612                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlccMapSSLErrorToDB2Error, probe:30
+MESSAGE : DIA3604E The SSL function "gsk_secure_soc_init" failed with the 
+          return code "414" in "sqlccSSLSocketSetup".
+
+2015-02-17-06.12.58.625382-300 I2984E342            LEVEL: Error
+PID     : 58613                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlcctcpconnr, probe:110
+MESSAGE : DIA3202C The TCP/IP call "connect" returned an errno="60".
+
+2015-02-17-06.16.52.445853-300 I3327E342            LEVEL: Error
+PID     : 58619                TID : 140735151870720PROC : node
+INSTANCE: DB2                  NODE : 000
+HOSTNAME: davyjones.torolab.ibm.com
+FUNCTION: DB2 UDB, common communication, sqlcctcpconnr, probe:110
+MESSAGE : DIA3202C The TCP/IP call "connect" returned an errno="60".

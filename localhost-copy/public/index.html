@@ -39,12 +39,24 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
     <script
       src="http://maps.googleapis.com/maps/api/js">
       </script>
 
       <script>
+      $.ajax({
+          url: '/mapquery',
+          success: function (response) {
+              console.log(response);
+              window.alert(response.responseText);
+          },
+          error: function(err) {
+            window.alert(err.responseText)
+          }
+      });
+
       var myCenter=new google.maps.LatLng(40.42297,-86.90810);
 
       var whereElse = 'spotify:user:124714937:playlist:35KBciu2ddXHym6aMwAYej';
@@ -214,8 +226,8 @@
             </div>
         </div>
     </section>
-    <!--footer end-->
-
+    <!--footer end -->
+<!--
 <script id="playlists-template" type="text/x-handlebars-template">
   <h2>Your Playlists</h2>
   <div class="media">
@@ -357,6 +369,7 @@
         }
       })();
     </script>
+    -->
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>

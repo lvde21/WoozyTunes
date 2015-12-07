@@ -15,10 +15,20 @@ var cfenv = require('cfenv');
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
+var ibmdb = require('ibm_db');
 
 var client_id = 'd760697eaca94f8394381d8fadc557ee'; // Your client id
 var client_secret = '3a79a31af3d7416bbf4d37f7affab65e'; // Your client secret
 var redirect_uri = 'http://woozytunes.mybluemix.net/callback'; // Your redirect uri
+
+if (process.env.VCAP_SERVICES) {
+  env = JSON.parse(process.env.VCAP_SERVICES);
+}
+
+var credentials = env['sqldb'][0].credentials;
+var dsnString = "DRIVER={DB2};DATABASE=" + credentials.db + ";UID=" + credentials.username + ";PWD=" + credentials.password + ";HOSTNAME=" + credentials.hostname +";port=" + credentials.port;
+
+
 
 /**
  * Generates a random string containing numbers and letters
@@ -41,6 +51,29 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'))
    .use(cookieParser());
+
+app.get('/mapquery', function(req, res, next) {
+
+  ibmdb.open(dsnString, function(err, conn) {
+    if (err) {
+      res.write("error: ", err.message + "<br>\n"); res.end();
+    }
+    else { 
+      var sqlStatement = "SELECT URI, NAME, LATITUDE, LONGITUDE FROM USER11711.PLAYLISTS";
+
+      conn.query(sqlStatement, function (err,tables,moreResultSets) {
+        if (err) {
+          res.write("SQL Error: " + err + "<br>;\n");
+          res.end();
+        }
+        else {
+          res.json({ mapresponse: tables });
+        }
+      }); 
+    }
+  });
+});
+
 
 app.get('/login', function(req, res) {
 

@@ -39,13 +39,17 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
     <script
       src="http://maps.googleapis.com/maps/api/js">
       </script>
 
       <script>
-      var myCenter=new google.maps.LatLng(40.42297,-86.90810);
+
+
+/*
+      
 
       var whereElse = 'spotify:user:124714937:playlist:35KBciu2ddXHym6aMwAYej';
       var whereCoords = new google.maps.LatLng(40.42297,-86.90810);
@@ -64,6 +68,7 @@
 
       var threeOhEight = 'spotify:user:124714937:playlist:4caBQ5cATwOv4NMKakRv0R';
       var threeCoords = new google.maps.LatLng(40.42405,-86.90849);
+      */
 
       function newMarker(map, pos, name, play)
       {
@@ -83,6 +88,8 @@
 
       function initialize()
       {
+        var myCenter=new google.maps.LatLng(40.42297,-86.90810);
+
         var mapProp = {
           center: myCenter,
           zoom:16,
@@ -91,12 +98,33 @@
 
         var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
+        $.ajax({
+          url: '/mapquery',
+          success: function (response) {
+              var mapres = response['mapresponse']
+              for(i = 0; i < mapres.length; i++) {
+                var obj = mapres[i];
+                var latitude = obj['LATITUDE'];
+                var longitude = obj['LONGITUDE'];
+                var listname = obj['NAME'];
+                var listuri = obj['URI'];
+
+                var coords = new google.maps.LatLng(latitude,longitude);
+                newMarker(map, coords, listname, listuri);
+              }
+          },
+          error: function(err) {
+            window.alert(err.responseText)
+          }
+      });
+
+/*
         newMarker(map, whereCoords, "Where Else Bar", whereElse);
         newMarker(map, harrysCoords, "Harry's Chocolate Shop", harrys);
         newMarker(map, jakesCoords, "Jake's Roadhouse", jakes);
         newMarker(map, brothersCoords, "Brothers Bar & Grill", brothers);
         newMarker(map, cactusCoords, "Neon Cactus", cactus);
-        newMarker(map, threeCoords, "308 on State", threeOhEight);
+        newMarker(map, threeCoords, "308 on State", threeOhEight);*/
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
@@ -214,8 +242,8 @@
             </div>
         </div>
     </section>
-    <!--footer end-->
-
+    <!--footer end -->
+<!--
 <script id="playlists-template" type="text/x-handlebars-template">
   <h2>Your Playlists</h2>
   <div class="media">
@@ -357,6 +385,7 @@
         }
       })();
     </script>
+    -->
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
