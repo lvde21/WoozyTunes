@@ -1,101 +1,249 @@
 <!doctype html>
-<html>
+<html lang="en">
+
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <!--[if IE]>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <![endif]-->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
     <title>WoozyTunes</title>
-    <!--  Bootstrap Style -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet" />
-    <!--  Font-Awesome Style -->
-    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
-    <!--  Animation Style -->
-    <link href="assets/css/animate.css" rel="stylesheet" />
-    <!--  Pretty Photo Style -->
-    <link href="assets/css/prettyPhoto.css" rel="stylesheet" />
-    <!--  Google Font Style -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-    <!--  Custom Style -->
-    <link rel="stylesheet" type="text/css" href="https://developer.spotify.com/web-api/static/css/cached.css">
-    <link href="assets/css/style.css" rel="stylesheet" />
 
-    <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/stylish-portfolio.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
     
+    <!--  Custom Style -->
     <style type='text/css'>
-    body {
-    padding: 20px;
-}
 
-#login, #loggedin, .hideme{
-        display: none;
-      }
-      .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
-      }
+      #login, #loggedin, .hideme{
+              display: none;
+            }
+            .text-overflow {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              width: 500px;
+            }
 
-#search-form, .form-control {
-    margin-bottom: 20px;
-  }
-
-#home{
-    margin-top: 130px;
-}
     </style>
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+    <script
+      src="http://maps.googleapis.com/maps/api/js">
+      </script>
+
+      <script>
+
+
+/*
+      
+
+      var whereElse = 'spotify:user:124714937:playlist:35KBciu2ddXHym6aMwAYej';
+      var whereCoords = new google.maps.LatLng(40.42297,-86.90810);
+
+      var harrys = 'spotify:user:jwtownse:playlist:5OV1Vlgt232wzAnyuEnU8W';
+      var harrysCoords = new google.maps.LatLng(40.42383,-86.90901);
+
+      var jakes = 'spotify:user:124714937:playlist:27UQZcXLmizAy262Ecv681';
+      var jakesCoords = new google.maps.LatLng(40.42345,-86.90819);
+
+      var brothers = 'spotify:user:124714937:playlist:7k7ypjdUWfUPfikqR5vk2v';
+      var brothersCoords = new google.maps.LatLng(40.42404,-86.90833);
+
+      var cactus = 'spotify:user:124714937:playlist:5ORIg0xz0XipGxBcOzEzdK';
+      var cactusCoords = new google.maps.LatLng(40.42321,-86.90051);
+
+      var threeOhEight = 'spotify:user:124714937:playlist:4caBQ5cATwOv4NMKakRv0R';
+      var threeCoords = new google.maps.LatLng(40.42405,-86.90849);
+      */
+
+      function newMarker(map, pos, name, play)
+      {
+        var marker = new google.maps.Marker({
+          position: pos,
+          title: name
+        });
+
+        google.maps.event.addListener(marker,'click',function() {
+        var newcontent = '<h2>'+name+'</h2><iframe src="https://embed.spotify.com/?uri='+ play + '" width="500" height="400" frameborder="0" allowtransparency="true"></iframe>';
+        document.getElementById("playlistcontainer").innerHTML = newcontent;
+        });
+
+        marker.setMap(map);
+      }
+
+
+      function initialize()
+      {
+        var myCenter=new google.maps.LatLng(40.42297,-86.90810);
+
+        var mapProp = {
+          center: myCenter,
+          zoom:16,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+        $.ajax({
+          url: '/mapquery',
+          success: function (response) {
+              var mapres = response['mapresponse']
+              for(i = 0; i < mapres.length; i++) {
+                var obj = mapres[i];
+                var latitude = obj['LATITUDE'];
+                var longitude = obj['LONGITUDE'];
+                var listname = obj['NAME'];
+                var listuri = obj['URI'];
+
+                var coords = new google.maps.LatLng(latitude,longitude);
+                newMarker(map, coords, listname, listuri);
+              }
+          },
+          error: function(err) {
+            window.alert(err.responseText)
+          }
+      });
+
+/*
+        newMarker(map, whereCoords, "Where Else Bar", whereElse);
+        newMarker(map, harrysCoords, "Harry's Chocolate Shop", harrys);
+        newMarker(map, jakesCoords, "Jake's Roadhouse", jakes);
+        newMarker(map, brothersCoords, "Brothers Bar & Grill", brothers);
+        newMarker(map, cactusCoords, "Neon Cactus", cactus);
+        newMarker(map, threeCoords, "308 on State", threeOhEight);*/
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
 
   </head>
 
   <body>
-    <div class="navbar navbar-default navbar-fixed-top move-me ">
+    <!-- preloader -->
+    <div id="pre-div">
+        <div id="loader">
+        </div>
+    </div>
+     <!-- preloader end -->
+
+    <!-- Navigation -->
+    <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
+    <nav id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
+            <li class="sidebar-brand">
+                <a href="#top"  onclick = $("#menu-close").click(); >WoozyTunes</a>
+            </li>
+            <li>
+                <a href="#top" onclick = $("#menu-close").click(); >Home</a>
+            </li>
+            <li>
+                <a href="#uSelect" onclick = $("#menu-close").click(); >uSelect</a>
+            </li>
+            <li>
+                <a href="#uListen" onclick = $("#menu-close").click(); > uListen</a>
+            </li>
+            <li>
+                <a href="#Credits" onclick = $("#menu-close").click(); > Contributors</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- Navigation End -->
+
+    <!-- Home -->
+    <header id="top" class="header">
+        <div class="text-vertical-center">
+            <img src="WoozyTunes.png">
+            <h3>Live stream music from your favourite local bars and clubs</h3>
+            <br>
+            <!-- next line points to Spotify login-->
+                <a href="#uListen" class="btn btn-medium-light btn-lg">Let the party begin</a>
+            
+        </div>
+    </header>
+    <!-- Home End -->
+
+    <!-- uSelect -->
+    <section id="uSelect" class="portfolio shot">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-
-                <a class="navbar-brand">
-                    <img src="assets/img/logo.png" class="navbar-brand-logo center" alt="" />
-
-                </a>
-            </div>
-            <div class="navbar-collapse collapse move-me">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                      <div id="login">
-                        <a href="/login" class="btn style2">Log in</a>
-                        </div>
-                    </li> 
-                    <li>
-                      <div id="user-profile"></div>
-                    </li> 
-
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div id="home" >
-      <div class="overlay">
-          <div class="container">
-            <div id="oauth" class="hideme"></div>
             <div class="row">
-              <div class="col-xs-6" id="playlists"></div>
-              <div class="col-xs-6" id="nowplaying"></div>
+                <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h2>uSelect</h2>
+                    <hr class="small">
+                    <div id="mapcontainer" class="row">
+                      <div id="googleMap" style="width:100%;height:400px;"></div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
+    </section>
+    <!-- uSelect End-->
 
+    <!-- uListen -->
+    <section id="uListen" class="portfolio shots">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h2>uListen</h2>
+                    <hr class="small">
+                    <hr>
+                    <div id="playlistcontainer" class="row">    
+                        <iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ" width="400" height="400" frameborder="0" allowtransparency="true"></iframe>
+                    </div>
+                    <hr>
+                    <hr>
+                    <div class="row">
+                        <ul class="list-inline">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
+                        </li>
+                    </ul>
+                    </div>
+                    <!-- /.row (nested) -->
+                </div>
+                <!-- /.col-lg-10 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- uListen End -->
+
+    <!--footer contains credits-->
+    <section id="Credits" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h4><strong>A CS252 Project by:</strong></h4>
+                    <p>Lala Vaishno De<br>Paul Pratt<br>Emma Whyne</p>  
+                    <hr class="small">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--footer end -->
+<!--
 <script id="playlists-template" type="text/x-handlebars-template">
   <h2>Your Playlists</h2>
   <div class="media">
@@ -107,9 +255,6 @@
       {{/each}}
     </div>
   </div>
-
-    
-    
     
 </script>
 
@@ -240,23 +385,49 @@
         }
       })();
     </script>
+    -->
 
-    <!--./ FOOTER SECTION END -->
-    <!--  Jquery Core Script -->
-    <script src="assets/js/jquery-1.10.2.js"></script>
-    <!--  Core Bootstrap Script -->
-    <script src="assets/js/bootstrap.js"></script>
-     <!--  WOW Script -->
-    <script src="assets/js/wow.min.js"></script>
-    <!--  Scrolling Script -->
-    <script src="assets/js/jquery.easing.min.js"></script>
-    <!--  PrettyPhoto Script -->
-    <script src="assets/js/jquery.prettyPhoto.js"></script>
-    <!--  Custom Scripts -->
-    <script src="assets/js/custom.js"></script>
-    <script type="text/javascript">
-        $('.btn').prepend('<div class="hover"><span></span><span></span><span></span><span></span><span></span></div>');
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script>
+    // Closes the sidebar menu
+    $("#menu-close").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+
+    // Opens the sidebar menu
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#sidebar-wrapper").toggleClass("active");
+    });
+
+    // Scrolls to the selected menu item on the page
+    $(function() {
+        $('a[href*=#]:not([href=#])').click(function() {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: target.offset().top
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+
     </script>
+
+    <!-- Preloader script -->
+    <script src="js/custom.js"></script>
 
     </body>
 
