@@ -6,6 +6,9 @@ This project is intended as a submission for Project 6 of Purdue's Fall 2015 CS2
 
 * Finalize the Interface
 * Integrate the UI with the Javascript
+* Clean up the repository
+* Make the playlists more "realistic"
+* POTENTIALLY - Follow along with what's currently playing
 * MAYBE Allow users to add new pins with playlists
 * MAYBE Allow users to favorite playlists - implies a login function
 * MAYBE Transfer more of our index.html code to a designated .js file. 
