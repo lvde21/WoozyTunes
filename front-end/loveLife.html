@@ -62,7 +62,7 @@
             <h3>Live stream music from your favourite local bars and clubs</h3>
             <br>
             <!-- next line points to Spotify login-->
-                <a href="#uListen" class="btn btn-medium-light btn-lg">Let the party begin</a>
+                <a href="#uSelect" class="btn btn-medium-light btn-lg">Let the party begin</a>
             
         </div>
     </header>
@@ -75,10 +75,16 @@
                 <div class="col-lg-10 col-lg-offset-1 text-center">
                     <h2>uSelect</h2>
                     <hr class="small">
+                    <hr>
                 </div>
             </div>
         </div>
+        <div id="map"></div>   
+        <hr>
+        <hr>
     </section>    
+
+
 
     <!-- uListen -->
     <section id="uListen" class="portfolio shots">
@@ -112,6 +118,8 @@
             </div>
             <!-- /.row -->
         </div>
+        <hr>
+        <hr>
         <!-- /.container -->
     </section>
 
@@ -132,11 +140,165 @@
 
 
 
+
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+
+    <!-- Google Maps-related JavaScript -->
+    <script type="text/javascript">
+        google.maps.event.addDomListener(window, 'load', init);
+
+        function init() {
+            var mapOptions = {
+                zoom: 15,
+
+                // The latitude and longitude of center of the map 
+                center: new google.maps.LatLng(40.425581, -86.908285), 
+
+                // Disables the default Google Maps UI components
+                disableDefaultUI: true,
+                scrollwheel: false,
+                draggable: true,
+
+                // Map style from Snazzy Maps
+                styles: [{"stylers":[{"hue":"#ff1a00"},{"invert_lightness":true},{"saturation":-100},{"lightness":33},{"gamma":0.5}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#2D333C"}]}]
+            };
+
+            // Get the HTML DOM element that will contain your map 
+            // We are using a div with id="map" seen below in the <body>
+            var mapElement = document.getElementById('map');
+
+            // Create the Google Map using out element and options defined above
+            var map = new google.maps.Map(mapElement, mapOptions);
+
+            // Custom Map Marker Icon in -map-marker.png 
+            var image = 'img/map-marker.png';
+            
+
+            // Harry's
+            var Harrys = {lat: 40.423842, lng: -86.908998};
+            var harrysMarker = new google.maps.Marker({
+                position: Harrys,
+                map: map,
+                icon: image,
+                title: 'Harrys'
+            });
+            // Neon Cactus
+            var Neon = {lat: 40.423207, lng: -86.900516};
+            var neonMarker = new google.maps.Marker({
+                position: Neon,
+                map: map,
+                icon: image
+            });
+
+            // Brothers 
+            var Brothers = {lat: 40.422943, lng: -86.903192};
+            var brothersMarker = new google.maps.Marker({
+                position: Brothers,
+                map: map,
+                icon: image
+            });
+
+            var infowindow = null;
+
+            // eventListeners for infoWindow             
+            harrysMarker.addListener('click', function() {
+                var contentString =
+                '<div class="box" id ="myInfoWinDiv" style="background:url(img/harrysImg.png) no-repeat 50% 50%;">' +
+                '<div class="overlay">' +
+                        '<span class="play"><img src="img/playButton.png"></span>' +
+                    '</div>' +
+                '</div>';
+
+                if(infowindow != null) infowindow.close();
+
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+                
+                infowindow.open(map, harrysMarker);
+
+                // Scroll function for each different listener
+                google.maps.event.addListener(infowindow,'domready',function(){
+                    $('#myInfoWinDiv').click(function() {
+                        $('html,body').animate({
+                        scrollTop: $("#uListen").offset().top},
+                        1000);
+                    });
+                });
+
+            });
+
+            neonMarker.addListener('click', function() {
+                var contentString =
+                '<div class="box" id ="myInfoWinDiv" style="background:url(img/neonImg.png) no-repeat 50% 50%;">' +
+                '<div class="overlay">' +
+                        '<span class="play"><img src="img/playButton.png"></span>' +
+                    '</div>' +
+                '</div>';
+
+                if(infowindow != null) infowindow.close();
+
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });
+
+                infowindow.open(map, neonMarker);
+
+                // Scroll function for each different listener
+                google.maps.event.addListener(infowindow,'domready',function(){
+                    $('#myInfoWinDiv').click(function() {
+                        $('html,body').animate({
+                        scrollTop: $("#uListen").offset().top},
+                        1000);
+                    });
+                });
+
+            });
+
+
+            brothersMarker.addListener('click', function() {
+                var contentString =
+                '<div class="box" id ="myInfoWinDiv" style="background:url(img/brothersImg.png) no-repeat 50% 50%;">' +
+                '<div class="overlay">' +
+                        '<span class="play"><img src="img/playButton.png"></span>' +
+                    '</div>' +
+                '</div>';
+
+                if(infowindow != null) infowindow.close();
+
+                infowindow = new google.maps.InfoWindow({
+                    content: contentString
+                });             
+                
+                infowindow.open(map, brothersMarker);
+
+                // Scroll function for each different listener
+                google.maps.event.addListener(infowindow,'domready',function(){
+                    $('#myInfoWinDiv').click(function() {
+                        $('html,body').animate({
+                        scrollTop: $("#uListen").offset().top},
+                        1000);
+                    });
+                });
+
+            });
+            
+
+
+        }
+        
+
+
+    </script>
+
+
 
     <!-- Custom Theme JavaScript -->
     <script>
@@ -168,8 +330,6 @@
             }
         });
     });
-
-
 
     </script>
 
