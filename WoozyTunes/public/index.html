@@ -44,7 +44,9 @@
 
     <script>
 
-      function newMarker(map, pos, name, play, markerImg, image, infowindow)
+      var infowindow = null;
+
+      function newMarker(map, pos, name, play, markerImg, image)
       {
 
         var marker = new google.maps.Marker({
@@ -102,8 +104,6 @@
 
         var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
-        var infowindow = null;
-
         // Custom Map Marker Icon in -map-marker.png 
         var markerImg = 'img/map-marker.png';
 
@@ -120,7 +120,7 @@
                 var image = obj['IMAGE'];
 
                 var coords = new google.maps.LatLng(latitude,longitude);
-                newMarker(map, coords, listname, listuri, markerImg, image, infowindow);
+                newMarker(map, coords, listname, listuri, markerImg, image);
               }
           },
           error: function(err) {
