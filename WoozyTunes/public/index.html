@@ -34,69 +34,78 @@
               width: 500px;
             }
 
+
     </style>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
 
-    <script
-      src="http://maps.googleapis.com/maps/api/js">
-      </script>
+    <script>
 
-      <script>
-
-
-/*
-      
-
-      var whereElse = 'spotify:user:124714937:playlist:35KBciu2ddXHym6aMwAYej';
-      var whereCoords = new google.maps.LatLng(40.42297,-86.90810);
-
-      var harrys = 'spotify:user:jwtownse:playlist:5OV1Vlgt232wzAnyuEnU8W';
-      var harrysCoords = new google.maps.LatLng(40.42383,-86.90901);
-
-      var jakes = 'spotify:user:124714937:playlist:27UQZcXLmizAy262Ecv681';
-      var jakesCoords = new google.maps.LatLng(40.42345,-86.90819);
-
-      var brothers = 'spotify:user:124714937:playlist:7k7ypjdUWfUPfikqR5vk2v';
-      var brothersCoords = new google.maps.LatLng(40.42404,-86.90833);
-
-      var cactus = 'spotify:user:124714937:playlist:5ORIg0xz0XipGxBcOzEzdK';
-      var cactusCoords = new google.maps.LatLng(40.42321,-86.90051);
-
-      var threeOhEight = 'spotify:user:124714937:playlist:4caBQ5cATwOv4NMKakRv0R';
-      var threeCoords = new google.maps.LatLng(40.42405,-86.90849);
-      */
-
-      function newMarker(map, pos, name, play)
+      function newMarker(map, pos, name, play, markerImg, image, infowindow)
       {
+
         var marker = new google.maps.Marker({
           position: pos,
-          title: name
+          title: name,
+          icon: markerImg
         });
 
         google.maps.event.addListener(marker,'click',function() {
-        var newcontent = '<h2>'+name+'</h2><iframe src="https://embed.spotify.com/?uri='+ play + '" width="500" height="400" frameborder="0" allowtransparency="true"></iframe>';
-        document.getElementById("playlistcontainer").innerHTML = newcontent;
-        });
+          var contentString =
+          '<div class="box" id ="myInfoWinDiv" style="background:url(' + image + ') no-repeat 50% 50%;">' +
+          '<div class="overlay">' +
+                  '<span class="play"><img src="img/playButton.png"></span>' +
+              '</div>' +
+          '</div>';
 
+          if(infowindow != null) infowindow.close();
+
+          infowindow = new google.maps.InfoWindow({
+              content: contentString
+          });
+          
+          infowindow.open(map, marker);
+
+          // Scroll function for each different listener
+          google.maps.event.addListener(infowindow,'domready',function(){
+              $('#myInfoWinDiv').click(function() {
+                  var newcontent = '<h2>'+name+'</h2><iframe src="https://embed.spotify.com/?uri='+ play + '" width="400" height="400" frameborder="0" allowtransparency="true"></iframe>';
+                  document.getElementById("playlistcontainer").innerHTML = newcontent;
+
+                  $('html,body').animate({
+                  scrollTop: $("#uListen").offset().top},
+                  1000);
+              });
+          });
+        });
         marker.setMap(map);
       }
 
 
       function initialize()
       {
-        var myCenter=new google.maps.LatLng(40.42297,-86.90810);
+        var myCenter=new google.maps.LatLng(40.42359,-86.90808);
 
         var mapProp = {
           center: myCenter,
-          zoom:16,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
+          zoom:18,
+          disableDefaultUI: true,
+          scrollwheel: false,
+          draggable: true,
+
+          // Map style from Snazzy Maps
+          styles: [{"stylers":[{"hue":"#ff1a00"},{"invert_lightness":true},{"saturation":-100},{"lightness":33},{"gamma":0.5}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#2D333C"}]}]
           };
 
         var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+
+        var infowindow = null;
+
+        // Custom Map Marker Icon in -map-marker.png 
+        var markerImg = 'img/map-marker.png';
 
         $.ajax({
           url: '/mapquery',
@@ -108,9 +117,10 @@
                 var longitude = obj['LONGITUDE'];
                 var listname = obj['NAME'];
                 var listuri = obj['URI'];
+                var image = obj['IMAGE'];
 
                 var coords = new google.maps.LatLng(latitude,longitude);
-                newMarker(map, coords, listname, listuri);
+                newMarker(map, coords, listname, listuri, markerImg, image, infowindow);
               }
           },
           error: function(err) {
@@ -118,13 +128,6 @@
           }
       });
 
-/*
-        newMarker(map, whereCoords, "Where Else Bar", whereElse);
-        newMarker(map, harrysCoords, "Harry's Chocolate Shop", harrys);
-        newMarker(map, jakesCoords, "Jake's Roadhouse", jakes);
-        newMarker(map, brothersCoords, "Brothers Bar & Grill", brothers);
-        newMarker(map, cactusCoords, "Neon Cactus", cactus);
-        newMarker(map, threeCoords, "308 on State", threeOhEight);*/
       }
 
       google.maps.event.addDomListener(window, 'load', initialize);
@@ -172,7 +175,7 @@
             <h3>Live stream music from your favourite local bars and clubs</h3>
             <br>
             <!-- next line points to Spotify login-->
-                <a href="#uListen" class="btn btn-medium-light btn-lg">Let the party begin</a>
+                <a href="#uSelect" class="btn btn-medium-light btn-lg">Let the party begin</a>
             
         </div>
     </header>
@@ -185,12 +188,14 @@
                 <div class="col-lg-10 col-lg-offset-1 text-center">
                     <h2>uSelect</h2>
                     <hr class="small">
-                    <div id="mapcontainer" class="row">
-                      <div id="googleMap" style="width:100%;height:400px;"></div>
-                    </div>
+                    <hr>
                 </div>
             </div>
         </div>
+        <div id="googleMap" style="width:100%;height:400px;"></div>
+        </div>
+        <hr>
+        <hr>
     </section>
     <!-- uSelect End-->
 
@@ -202,23 +207,8 @@
                     <h2>uListen</h2>
                     <hr class="small">
                     <hr>
-                    <div id="playlistcontainer" class="row">    
-                        <iframe src="https://embed.spotify.com/?uri=spotify:user:erebore:playlist:788MOXyTfcUb1tdw4oC7KJ" width="400" height="400" frameborder="0" allowtransparency="true"></iframe>
+                    <div id="playlistcontainer">
                     </div>
-                    <hr>
-                    <hr>
-                    <div class="row">
-                        <ul class="list-inline">
-                        <li>
-                            <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
-                        </li>
-                    </ul>
                     </div>
                     <!-- /.row (nested) -->
                 </div>
@@ -227,8 +217,29 @@
             <!-- /.row -->
         </div>
         <!-- /.container -->
+        <hr>
+        <hr>
     </section>
     <!-- uListen End -->
+
+    <section id="social" class="portfolio shots">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10 col-lg-offset-1 text-center">
+            <ul class="list-inline">
+              <li>
+                  <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+              </li>
+              <li>
+                  <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+              </li>
+              <li>
+                  <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </section>
 
     <!--footer contains credits-->
     <section id="Credits" class="footer">
@@ -243,149 +254,6 @@
         </div>
     </section>
     <!--footer end -->
-<!--
-<script id="playlists-template" type="text/x-handlebars-template">
-  <h2>Your Playlists</h2>
-  <div class="media">
-    <div class="media-body">
-      {{#each items}}
-      <dl class="dl-horizontal">
-        <dd><button class="btn btn-primary playlistbtn" value="{{name}}" id="spotify:user:{{owner.id}}:playlist:{{id}}">{{name}}</button></dd>
-      </dl>
-      {{/each}}
-    </div>
-  </div>
-    
-</script>
-
-<script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>{{display_name}}</h1>
-      <div class="media, hideme">
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dd><input type="text" id="userID" value={{id}} /></dd>
-          </dl>
-        </div>
-      </div>
-    </script>
-
-    <script id="oauth-template" type="text/x-handlebars-template">
-    <h2>oAuth info</h2>
-      <dl class="dl-horizontal">
-        <dt>Access token</dt><dd><input type="text" id="accessToken" value={{access_token}} /></dd>
-        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
-        <dt></dt><dd><button class="btn style2" id="obtain-new-token">New Token</button></dd>
-      </dl>
-    </script>
-
-    <script>
-      (function() {
-
-        /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-        function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
-          while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
-          }
-          return hashParams;
-        }
-
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-            userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
-
-        var oauthSource = document.getElementById('oauth-template').innerHTML,
-            oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
-
-        var playTemplateSource = document.getElementById('playlists-template').innerHTML,
-            playTemplate = Handlebars.compile(playTemplateSource),
-            playResultsPlaceholder = document.getElementById('playlists'),
-            playingCssClass = 'playing',
-            audioObject = null;
-
-        function getPlaylists(userID, authToken) {
-          $.ajax({
-                url: 'https://api.spotify.com/v1/users/' + userID + '/playlists',
-                type: 'GET',
-                data: {limit: '6'},
-                headers: { 'Authorization': 'Bearer ' + authToken},
-                success: function (response) {
-                    console.log(response);
-                    playResultsPlaceholder.innerHTML = playTemplate(response);
-                },
-                error: function(err) {
-                  window.alert(err.responseText)
-                }
-            });
-        }
-
-        var params = getHashParams();
-
-        var access_token = params.access_token,
-            refresh_token = params.refresh_token,
-            error = params.error;
-
-        if (error) {
-          alert('There was an error during the authentication');
-        } else {
-          if (access_token) {
-            // render oauth info
-            oauthPlaceholder.innerHTML = oauthTemplate({
-              access_token: access_token,
-              refresh_token: refresh_token
-            });
-
-            $.ajax({
-                url: 'https://api.spotify.com/v1/me',
-                headers: {
-                  'Authorization': 'Bearer ' + access_token
-                },
-                success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-                  getPlaylists(document.getElementById('userID').value, document.getElementById('accessToken').value);
-
-                  $('#login').hide();
-                  $('#loggedin').show();
-                }
-            });
-          } else {
-              // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
-          }
-
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token;
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              });
-            });
-          }, false);
-
-          playlists.addEventListener('click', function (e) {
-              var target = e.target;
-              if (target !== null && target.classList.contains('playlistbtn')) {
-                var newcontent = '<h2>' + target.value + '</h2> <iframe src="https://embed.spotify.com/?uri=' + target.id + '" width="500" height="400" frameborder="0" allowtransparency="true"></iframe>';
-                document.getElementById("nowplaying").innerHTML = newcontent;
-              }
-          });
-        }
-      })();
-    </script>
-    -->
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
@@ -429,9 +297,7 @@
     <!-- Preloader script -->
     <script src="js/custom.js"></script>
 
-    </body>
-
-    
+  </body>
 
 </html>
 

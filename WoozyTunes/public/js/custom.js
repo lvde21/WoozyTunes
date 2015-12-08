@@ -42,13 +42,7 @@
             $('.carousel').carousel({
                 interval: 4000 //TIME IN MILLI SECONDS
             })
-            // PRETTYPHOTO FUNCTION 
-
-            $("a.preview").prettyPhoto({
-                social_tools: false
-            });
-           
-           
+                   
             /*====================================
             WRITE YOUR SCRIPTS HERE
             ======================================*/
@@ -64,8 +58,6 @@
 
     $(document).ready(function () {
         mainApp.main_fun();
-        // WOW FUNCTION 
-        new WOW().init();
     });
 
 }(jQuery));

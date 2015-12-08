@@ -59,7 +59,7 @@ app.get('/mapquery', function(req, res, next) {
       res.write("error: ", err.message + "<br>\n"); res.end();
     }
     else { 
-      var sqlStatement = "SELECT URI, NAME, LATITUDE, LONGITUDE FROM USER11711.PLAYLISTS";
+      var sqlStatement = "SELECT URI, NAME, LATITUDE, LONGITUDE, IMAGE FROM USER11711.PLAYLISTS";
 
       conn.query(sqlStatement, function (err,tables,moreResultSets) {
         if (err) {
