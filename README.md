@@ -1,22 +1,23 @@
-# WoozyTunes - Listen to Local Nightlife
+PROJECT NAME:
+WoozyTunes
 
-This project is intended as a submission for Project 6 of Purdue's Fall 2015 CS252 Class.
+TEAM MEMBERS:
+Lala Vaishno De
+Paul Pratt
+Emma Wynne
 
-## Todo:
+LOGINS:
+del
+pratt20
+ewynne
 
-* Finalize the Interface
-* Integrate the UI with the Javascript
-* Clean up the repository
-* Make the playlists more "realistic"
-* POTENTIALLY - Follow along with what's currently playing
-* MAYBE Allow users to add new pins with playlists
-* MAYBE Allow users to favorite playlists - implies a login function
-* MAYBE Transfer more of our index.html code to a designated .js file. 
-* MAYBE See if we can use the app.js for more than just authentication.
+DESCRIPTION:
+WoozyTunes allows a user to stream the spotify music playlists of local bars and clubs.
+The application is has been made with a scaleable framework to easily put new venues on the map.
+We implemented WoozyTunes with Bluemix SQL DB, HTML5, Node.js, and the Spotify API.
 
-### Spotify Developer Info
+PROJECT URL:
+http://woozytunes.mybluemix.net/
 
-We registered these Redirect URIs. The localhost is for running on your own machine and the bluemix is for when we are running it on our instance.
-
-* http://localhost:8888/callback
-* http://woozytunes.mybluemix.net/callback
+REPOSITORY URL:
+https://github.com/lvde21/WoozyTunes
